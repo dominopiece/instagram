@@ -34,12 +34,17 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # third apps
+    # local apps
+    'accounts',
+    'instagram',
 ]
 
 MIDDLEWARE = [
@@ -103,6 +108,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# USER 모델 설정
+AUTH_USER_MODEL = "accounts.User"
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
