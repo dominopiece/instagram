@@ -11,6 +11,7 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
+# settings.py 경로 변경으로 인한 변경
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings.prod')
 
 application = get_wsgi_application()
