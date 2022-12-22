@@ -19,6 +19,11 @@ class Post(TimeStampedModel):
     like_user_set = models.ManyToManyField(
         settings.AUTH_USER_MODEL, blank=True, related_name="like_post_set"
     )
+    def __str__(self):
+        return self.caption
+
+    class Meta:
+        ordering = ["-id"]
 
 class Comment(TimeStampedModel):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

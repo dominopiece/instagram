@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
+import Post from "Post";
 
 const apiUrl = "http://127.0.0.1:8000/api/posts/"
 
@@ -19,15 +20,8 @@ function PostList() {
     return(
         <div>
             <h1>Post_List</h1>
-            {postList.map(post => {
-                const { id, caption, location, photo } = post;
-                return (
-                <div key={id}>
-                    { caption }, { location }
-                    <img src={ photo } alt={ caption } style={{ width: '100px' }}/>
-                </div>
-            )
-            }
+            {postList.map((post, index) => 
+            <Post post={ post } key={ index } />
             )}
             
         </div>
