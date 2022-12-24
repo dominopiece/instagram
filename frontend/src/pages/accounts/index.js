@@ -1,15 +1,23 @@
 import React from "react";
-import { Route } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useParams, useMatch } from "react-router-dom";
 import Login from "./Login";
+import NotFound from "./NotFound";
 import Profile from "./Profile";
 
-function Routes({ match }) {
+function Routes_test() {
+  const params = useParams();
+  const match = useMatch('/accounts')
   return (
-    <>
-      <Route exact path={match.url + "/profile"} element={<Profile />} />
-      <Route exact path={match.url + "/login"} element={<Login />} />
-    </>
+    <Routes>
+      <Route path={ {match} + "/profile"} element={<Profile />} />
+      <Route path={"/profile"} element={<Profile />} />
+      <Route path={ params.url + "/login"} element={<Login />} />
+      <Route path="*" element={<NotFound />} />
+      <Route path={ match + "/profile"} element={Profile} />
+      <Route path={ "/accounts/profile"} element={Profile} />
+      <Route path={match.url + "/login"} component={Login} />
+    </Routes>
   );
 }
 
-export default Routes;
+export default Routes_test;
