@@ -1,78 +1,117 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
-import { Alert } from "antd";
+import { useNavigate } from "react-router-dom";
+import { Alert, Descriptions, notification } from "antd";
 import Axios from "axios";
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input } from "antd";
+import ErrorList from "antd/es/form/ErrorList";
 
 // antd 코드
 export default function Signup() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [fieldErros, setFieldErros] = useState({});
 
-    const onFinish = (values) => {
-        const { username, password } = values;
+  const onFinish = (values) => {
+    async function fn() {
+      const { username, password } = values;
 
-        const data = { username, password }
-        Axios.post("https://localhost:8000/accounts/signup/", data);
+      setFieldErros({});
 
-        console.log('Success:', values);
-      };
-      const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-      };
-    return (
-        <Form
-          name="basic"
-          labelCol={{
-            span: 8,
-          }}
-          wrapperCol={{
-            span: 16,
-          }}
-          initialValues={{
-            remember: true,
-          }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          autoComplete="off"
-        >
-          <Form.Item
-            label="Username"
-            name="username"
-            rules={[
-              {
-                required: true,
-                message: 'Please input your username!',
+      const data = { username, password };
+      try {
+        await Axios.post("http://localhost:8000/accounts/signup/", data);
+
+        notification.open({
+          message: "회원 가입",
+          Descriptions: "로그인 후 페이지 이동",
+
+        })
+        navigate("/accounts/login");
+      } catch (error) {
+        if (error.response) {
+          const { data: filedsErrorMessages } = error.response;
+
+          setFieldErros(
+            Object.entries(filedsErrorMessages).reduce(
+              (acc, [filedName, erros]) => {
+                acc[filedName] = {
+                  [filedName]: erros.join(" "),
+                };
+                return acc;
               },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-    
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: 'Please input your password!',
-              },
-            ]}
-          >
-            <Input.Password />
-          </Form.Item>
-    
-          <Form.Item
-            wrapperCol={{
-              offset: 8,
-              span: 16,
-            }}
-          >
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Form.Item>
-        </Form>
-      );    
+              {}
+            )
+          );
+        }
+      }
+    }
+    fn();
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+
+  return (
+    <Form
+      name="basic"
+      labelCol={{
+        span: 8,
+      }}
+      wrapperCol={{
+        span: 16,
+      }}
+      initialValues={{
+        remember: true,
+      }}
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+      autoComplete="off"
+    >
+      <Form.Item
+        label="Username"
+        name="username"
+        rules={[
+          {
+            required: true,
+            message: "Please input your username!",
+          },
+          {
+            min: 5,
+            message: "min test 5글자 이상",
+          },
+        ]}
+        hasFeedback
+        {...fieldErros.username}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Password"
+        name="password"
+        rules={[
+          {
+            required: true,
+            message: "Please input your password!",
+          },
+        ]}
+        {...fieldErros.password}
+      >
+        <Input.Password />
+      </Form.Item>
+
+      <Form.Item
+        wrapperCol={{
+          offset: 8,
+          span: 16,
+        }}
+      >
+        <Button type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </Form.Item>
+    </Form>
+  );
 }
 
 // 회원 가입 폼
@@ -83,9 +122,8 @@ export default function Signup() {
 //     const [loading, setLoading] = useState(false);
 //     const navigate = useNavigate();
 
-
 //     const onSubmit = (e) => {
-//         e.preventDefault(); 
+//         e.preventDefault();
 
 //         setErrors({})
 //         setLoading(true)
