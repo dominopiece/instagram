@@ -4,11 +4,7 @@ import { Alert, Descriptions, notification } from "antd";
 import Axios from "axios";
 import { Button, Form, Input } from "antd";
 import ErrorList from "antd/es/form/ErrorList";
-import {
-  SettingFilled,
-  SmileOutlined,
-} from '@ant-design/icons';
-
+import { SettingFilled, SmileOutlined } from "@ant-design/icons";
 
 // antd 코드
 export default function Signup() {
@@ -26,18 +22,18 @@ export default function Signup() {
         await Axios.post("http://localhost:8000/accounts/signup/", data);
 
         notification.open({
-          message: "회원 가입",
-          descriptions: "로그인 후 페이지 이동",
-          icon: <SmileOutlined />
-        })
+          message: "회원 가입 성공",
+          description: "로그인 후 페이지 이동",
+          icon: <SmileOutlined />,
+        });
         navigate("/accounts/login");
       } catch (error) {
         if (error.response) {
-        notification.open({
-          message: "회원 가입 실패",
-          description: "실패지롱",
-          icon: <SettingFilled />
-        })
+          notification.open({
+            message: "회원 가입 실패",
+            description: "실패지롱",
+            icon: <SettingFilled />,
+          });
           const { data: filedsErrorMessages } = error.response;
 
           setFieldErros(
