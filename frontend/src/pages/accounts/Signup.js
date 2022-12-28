@@ -9,13 +9,13 @@ import { SettingFilled, SmileOutlined } from "@ant-design/icons";
 // antd 코드
 export default function Signup() {
   const navigate = useNavigate();
-  const [fieldErros, setFieldErros] = useState({});
+  const [fieldErrors, setfieldErrors] = useState({});
 
   const onFinish = (values) => {
     async function fn() {
       const { username, password } = values;
 
-      setFieldErros({});
+      setfieldErrors({});
 
       const data = { username, password };
       try {
@@ -34,13 +34,13 @@ export default function Signup() {
             description: "실패지롱",
             icon: <SettingFilled />,
           });
-          const { data: filedsErrorMessages } = error.response;
-
-          setFieldErros(
-            Object.entries(filedsErrorMessages).reduce(
-              (acc, [filedName, erros]) => {
-                acc[filedName] = {
-                  [filedName]: erros.join(" "),
+          const { data: fieldsErrorMessages } = error.response;
+          setfieldErrors(
+            Object.entries(fieldsErrorMessages).reduce(
+              (acc, [fieldName, errors]) => {
+                acc[fieldName] = {
+                  validateStatus: "error",
+                  help: errors.join(" ")
                 };
                 return acc;
               },
@@ -87,7 +87,7 @@ export default function Signup() {
           },
         ]}
         hasFeedback
-        {...fieldErros.username}
+        {...fieldErrors.username}
       >
         <Input />
       </Form.Item>
@@ -101,7 +101,7 @@ export default function Signup() {
             message: "Please input your password!",
           },
         ]}
-        {...fieldErros.password}
+        {...fieldErrors.password}
       >
         <Input.Password />
       </Form.Item>
