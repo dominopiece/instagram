@@ -4,10 +4,14 @@ import { Alert, Descriptions, notification } from "antd";
 import Axios from "axios";
 import { Card, Button, Form, Input } from "antd";
 import { SettingFilled, SmileOutlined } from "@ant-design/icons";
+import useLocalStorage from "utils/useLocalStorage"
 
 export default function Login() {
   const navigate = useNavigate();
+  const [jwtToken, setJwtToken] = useLocalStorage("jwtToken", "");
   const [fieldErrors, setfieldErrors] = useState({});
+
+  console.log("loadded jwtToken", jwtToken);
 
   const onFinish = (values) => {
     async function fn() {
@@ -17,17 +21,25 @@ export default function Login() {
 
       const data = { username, password };
       try {
-        const response = await Axios.post("http://localhost:8000/accounts/api/token/", data);
-        const { data: { access: jwtToken }} = response;
-        console.log("response :", response)
-        console.log("jwtToken:", jwtToken)
+        const response = await Axios.post(
+          "http://localhost:8000/accounts/api/token/",
+          data
+        );
+        const {
+          data: { access: jwtToken },
+        } = response;
+        console.log("response :", response);
+        console.log("jwtToken:", jwtToken);
 
-        // notification.open({
-        //   message: "로그인 성공",
-        //   description: "로그인 후 홈으로 이동",
-        //   icon: <SmileOutlined />,
-        // });
-        // navigate("/home");
+        setJwtToken(jwtToken);
+
+        notification.open({
+          message: "로그인 성공",
+          description: "로그인 후 홈으로 이동",
+          icon: <SmileOutlined />,
+        });
+        
+        // navigate("/home");   // TODO: 주소 이동
       } catch (error) {
         if (error.response) {
           notification.open({
@@ -41,7 +53,7 @@ export default function Login() {
               (acc, [fieldName, errors]) => {
                 acc[fieldName] = {
                   validateStatus: "error",
-                  help: errors.join(" ")
+                  help: errors.join(" "),
                 };
                 return acc;
               },
@@ -53,7 +65,6 @@ export default function Login() {
     }
     fn();
   };
-
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -91,7 +102,7 @@ export default function Login() {
           ]}
           hasFeedback
           {...fieldErrors.username}
-          {...fieldErrors.detail}   // FIXME: 작동 안됨
+          {...fieldErrors.detail} // FIXME: 작동 안됨
         >
           <Input />
         </Form.Item>
