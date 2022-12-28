@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # third apps
     'rest_framework',
     'corsheaders',
+    'rest_framework_simplejwt',
     # local apps
     'accounts',
     'instagram',
@@ -146,5 +147,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    )
+        # JWT
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }

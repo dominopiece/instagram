@@ -2,3 +2,5 @@ django
 pillo
 djangorestframework 
 django-cors-headers
+# new verson(simplejwt)
+djangorestframework-simplejwt
